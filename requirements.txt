@@ -1,0 +1,4 @@
+OpenAI
+load_dotenv
+pydantic
+requests
