@@ -2,3 +2,4 @@ OpenAI
 load_dotenv
 pydantic
 requests
+scikit-learn>=1.4
