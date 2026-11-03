@@ -8,15 +8,17 @@ MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 
-def ask_openaillm(user: str, system: str = "", max_tokens: int = 500, mock: str = "[MOCK] set OPENAI_API_KEY for real output") -> str:
-    if not os.getenv("OPENAI_API_KEY"):
-        return mock
+def ask_openaillm(user: str | list, system: str = "", max_tokens: int = 500, mock: str = "[MOCK] set OPENAI_API_KEY for real output") -> str:
+    """`user` can be a single prompt string or a list of {"role", "content"} messages (chat history)."""
     from openai import OpenAI
     client = OpenAI()
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
-    messages.append({"role": "user", "content": user})
+    if isinstance(user, list):
+        messages.extend(user)
+    else:
+        messages.append({"role": "user", "content": user})
     resp = client.chat.completions.create(
         model=OPENAI_MODEL,
         max_tokens=max_tokens,
